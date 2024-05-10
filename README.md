@@ -23,6 +23,31 @@ pip install -r requirements.txt
    - train.py
    - test.py
    - website file (HTML) in the public folder
+   - change these paths according to you file directory:
+here the file name with paths where you have to edit according to your directory:
+ 
+testunseen.py
+# Define the directory to save processed video frames
+output_folder = r"D:\Division\type1-Data\temp_result"
+
+processed_images_dir = r"D:\Division\type1-Data\testimageessed_images"
+
+# Directory to save processed images
+results_dir = r"D:\Division\type1-Data\testimage"
+
+model_path = r"C:\Users\abhad\OneDrive\Pictures\files\model.h5" // get the filder in the UNET code's folder
+
+train.py
+dataset_path = r"C:\Users\abhad\OneDrive\Pictures\finalone"
+
+test.py
+dataset_path = r"D:\Division\type1-Data" // this dataset should be the same as in the train file dataset
+
+website file(HTML): you can find it in the public folder
+additionalImage1 = `D:/Division/type1-Data/additional_images_folder1/${fileNameWithoutExtension}.png`;
+additionalImage2 = `D:/Division/type1-Data/additional_images_folder2/${fileNameWithoutExtension}.png`;
+processedImagePreview.src = "D:\\Division\\type1-Data\\testimage\\" + filename; // here you have to add the directory where you want to store the results
+
 
 ## Usage
 

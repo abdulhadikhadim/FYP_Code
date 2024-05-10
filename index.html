@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="./style.css"/>
+  <title>FYP-EEP</title>
+</head>
+<body class="font-Poppins" bgcolor="black ">
+  <!-- Header -->
+<!-- Header -->
+<header>
+  <nav class="container flex items-center py-4 mt-4 sm:mt-12">
+      <div class="py-1"><img src="./imgs/ptlogo.png" style="width:200px;height:200px" alt=""/></div>
+      <ul class="hidden sm:flex flex-1 justify-between lg\:items-end gap-12 text-gold uppercase text-xs ">
+          <li class="cursor-pointer font-bold text-center" style="font-size:64px;width:100%;">FINAL YEAR PROJECT
+          </li>
+      </ul>
+      <div class="flex sm:hidden flex-1 justify-end">
+          <i class="text-3xl fas fa-bars"></i>
+      </div>
+      
+  </nav>
+</header>
+  <!-- Project Description -->
+  <section class="py-20 mt-20">
+    <div class="sm:w-3/4 lg:w-5/12 mx-auto px-2">
+      <h1 class="text-3xl text-center text-gold">Upload Image or Video</h1>
+      <form action="http://172.28.0.12:5000/" method="post" enctype="multipart/form-data">
+        <!-- Image upload and preview -->
+        <div class="flex justify-center mt-6">
+          <div class="border border-dashed border-gray-400 rounded-lg p-8">
+            <div class="text-center">
+              <label for="file-upload" class="cursor-pointer">
+                <i class="fas fa-cloud-upload-alt text-4xl text-gray-400 mb-4"></i>
+                <p class="text-gray-400">Click to upload or drag image file here</p>
+              </label>
+              <input type="file" id="file-upload" class="hidden" accept="image/*" onchange="handleFileUpload(event)">
+            </div>
+          </div>
+        </div>
+        <div id="uploaded-image" class="mt-6 hidden">
+          <h2 class="text-lg font-bold text-yellow-800 mb-2">Uploaded Image Preview:</h2>
+          <img id="image-preview" class="max-w-sm mx-auto" alt="Uploaded Image Preview">
+        </div>
+
+      <!-- Video upload and preview -->
+      <div class="flex justify-center mt-6">
+        <div class="border border-dashed border-gray-400 rounded-lg p-8">
+          <div class="text-center">
+            <label for="video-upload" class="cursor-pointer">
+              <i class="fas fa-video text-4xl text-gray-400 mb-4"></i>
+              <p class="text-gray-400">Click to upload or drag video file here</p>
+            </label>
+            <input type="file" id="video-upload" class="hidden" accept="video/*" onchange="handleVideoUpload(event)">
+          </div>
+        </div>
+      </div>
+      <div id="uploaded-video" class="mt-6 hidden">
+        <h2 class="text-lg font-bold text-yellow-800 mb-2">Uploaded Video Preview:</h2>
+        <video id="video-preview" class="max-w-sm mx-auto" controls></video>
+      </div>
+      
+            <!-- Display processed image below this button -->
+            <div id="processed-image-container" class="mt-6 hidden">
+              <h2 class="text-lg font-bold text-yellow-800 mb-2">Model Predicted Image:</h2>
+              <img id="processed-image-preview" class="max-w-sm mx-auto" alt="Processed Image Preview">
+          </div>
+          <!-- Additional images containers -->
+          <div id="additional-image-1-container" class="mt-6 hidden">
+              <h2 class="text-lg font-bold text-yellow-800 mb-2">Leakage Current Density:</h2>
+              <img id="additional-image-1-preview" class="max-w-sm mx-auto" alt="Additional Image 1 Preview">
+          </div>
+          <div id="additional-image-2-container" class="mt-6 hidden">
+              <h2 class="text-lg font-bold text-yellow-800 mb-2">Electric Field Norm:</h2>
+              <img id="additional-image-2-preview" class="max-w-sm mx-auto" alt="Additional Image 2 Preview">
+          </div>
+          <button type="button" onclick="uploadAndProcessImage()"
+                  class="bg-gold mt-4 px-6 py-2 rounded-full animate-pulse center-button move-below"
+                  onclick="processImage()">Process Image
+          <button type="button" id="processVideoButton"  class="bg-gold mt-4 px-6 py-2 rounded-full animate-pulse center-button move-below">Process Video</button>
+          </button>
+          </button>
+      </form>
+  </div>
+  <div id="insulator-result" class="mt-4 text-center text-lg font-bold text-yellow-800 hidden"></div>
+  <div id="insulator-form-container" class="mt-6 hidden">
+    <h2 class="text-lg font-bold text-yellow-800 mb-2">Enter Insulator Parameters:</h2>
+    <form id="insulator-form">
+      <div class="mb-4">
+        <label for="leakage-current" class="block text-yellow-700 font-bold mb-2">Leakage Current Density(A/m^2):</label>
+        <input type="number" step="any" id="leakage-current" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter Leakage Current Density">
+      </div>
+      <div class="mb-4">
+        <label for="applied-voltage" class="block text-yellow-700 font-bold mb-2">Applied Voltage:</label>
+        <input type="number" step="any" id="applied-voltage" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Enter Applied Voltage">
+      </div>
+      <button type="button" onclick="submitInsulatorForm()" class="bg-gold mt-4 px-6 py-2 rounded-full">Calculate Life Left</button>
+    </form>
+  </div>
+</section>
+<script>
+  let additionalImage1, additionalImage2;
+
+function handleFileUpload(event) {
+
+const file = event.target.files[0];
+const reader = new FileReader();
+reader.onload = function (e) {
+  const imagePreview = document.getElementById('image-preview');
+  imagePreview.src = e.target.result;
+  document.getElementById('uploaded-image').classList.remove('hidden');
+};
+reader.readAsDataURL(file);
+
+// Extract the image name without the extension
+const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+console.log(fileNameWithoutExtension);
+}
+document.getElementById('processVideoButton').addEventListener('click', async function() {
+  const fileInput = document.getElementById('video-upload');
+  const file = fileInput.files[0];
+
+  if (!file) {
+    alert('Please select a video file to process.');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await fetch('http://127.0.0.1:5000/process_video', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (response.ok) {
+    alert('Video processing initiated. Please check the server logs for the result.');
+
+  } else {
+    alert('Error processing video. Please check the server logs for details.');
+  }
+});
+
+async function uploadAndProcessImage() {
+const fileInput = document.getElementById('file-upload');
+const file = fileInput.files[0];
+
+const formData = new FormData();
+formData.append('file', file);
+
+const response = await fetch('http://127.0.0.1:5000/', {
+  method: 'POST',
+  body: formData
+});
+
+const data = await response.json();
+displayProcessedImage(data.processed_image_path);
+
+// Use the extracted image name to set the paths for the additional images
+const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+additionalImage1 = `D:/Division/type1-Data/additional_images_folder1/${fileNameWithoutExtension}.png`;
+additionalImage2 = `D:/Division/type1-Data/additional_images_folder2/${fileNameWithoutExtension}.png`;
+console.log(additionalImage1)
+console.log(additionalImage2)
+
+displayAdditionalImages();
+}
+async function submitInsulatorForm() {
+  const leakageCurrent = document.getElementById('leakage-current').value;
+  const appliedVoltage = document.getElementById('applied-voltage').value;
+
+
+  const data = {
+    leakage_current: leakageCurrent,
+    applied_voltage: appliedVoltage,
+
+  };
+
+  const response = await fetch('http://127.0.0.1:5000/predict_life', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+
+  const result = await response.json();
+  const insulatorResultElement = document.getElementById('insulator-result');
+  insulatorResultElement.textContent = `The Expected life left based on these parameters is: ${result.life_left} Years`;
+  insulatorResultElement.classList.remove('hidden');
+}
+
+  function displayProcessedImage(filename) {
+      const processedImagePreview = document.getElementById('processed-image-preview');
+      processedImagePreview.src = "D:\\Division\\type1-Data\\testimage\\" + filename;
+      document.getElementById('processed-image-container').classList.remove('hidden');
+
+}
+function handleVideoUpload(event) {
+      const file = event.target.files[0];
+      const videoPreview = document.getElementById('video-preview');
+      const url = URL.createObjectURL(file);
+      videoPreview.src = url;
+      document.getElementById('uploaded-video').classList.remove('hidden');
+    }
+
+function displayAdditionalImages() {
+  setTimeout(function() {
+    const additionalImage1Preview = document.getElementById('additional-image-1-preview');
+    additionalImage1Preview.src = additionalImage1;
+    document.getElementById('additional-image-1-container').classList.remove('hidden');
+
+    const additionalImage2Preview = document.getElementById('additional-image-2-preview');
+    additionalImage2Preview.src = additionalImage2;
+    document.getElementById('additional-image-2-container').classList.remove('hidden');
+
+    // Show the insulator form after displaying the additional images
+    document.getElementById('insulator-form-container').classList.remove('hidden');
+  }, 3000); // 3000 milliseconds = 3 seconds delay
+}
+
+
+</script>
+
+<!-- Remaining HTML code -->
+
+</body>
+</html>
+
+
+  <!-- Hero -->
+  <section class="relative bg-black">
+    <div class="container flex flex-col-reverse lg:flex-row items-center gap-12 mt-14 lg:mt-28">
+      <!-- Content -->
+      <div class="flex flex-1 flex-col items-center lg:items-start">
+        <h2 class="text-gold text-3xl md:text-4 lg:text-5xl text-center lg:text-left mb-6">
+          AI ENHANCED DRONE FOR HIGH VOLTAGE INSULATOR SURFACE CONDITION MONITORING
+        </h2>
+        <p class="text-white text-lg text-center lg:text-left mb-6">
+          Insulators play a vital role in ensuring safe power transmission by providing electrical insulation and mechanical support. However, conducting manual inspections of these insulators in difficult conditions is expensive, time-consuming, and poses risks to grid reliability. To address this challenge, we propose using drones to inspect the surface condition of the insulators in our final year project.
+        </p>
+        <div class="flex justify-center flex-wrap gap-6">
+          
+        </div>
+      </div>
+      <!-- Image -->
+      <div class="flex justify-center flex-1 mb-10 md:mb-16 lg:mb-0 z-10">
+        <img class="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full img3" src="./imgs/giki2.jpg" alt="" />
+      </div>
+    </div>
+    <section class="py-20 mt-20">
+      <!-- Heading -->
+      <div class="sm:w-3/4 lg:w-5/12 mx-auto px-2">
+        <h1 class="text-3xl text-center text-gold">Our Results</h1>
+        <p class="text-center text-white mt-4"><!--Add line-->
+        
+        </p>
+      </div>
+      <!-- Cards -->
+      <div class="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 max-w-screen-lg mt-16">
+        <!-- Card 1 -->
+        <div class="flex flex-col rounded-md shadow-md lg:mb-16">
+          <div class="p-6 flex flex-col items-center">
+            <img src="./imgs/s1.png"  alt="" /> 
+            <h3 class="mt-5 mb-2 text-gold font-bold">Validation And Training Loss</h3>
+            
+          </div>
+          <hr class="border-b border-bookmark-white" />
+          <div class="flex p-6">
+            
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="flex flex-col rounded-md shadow-md lg:my-8">
+          <div class="p-6 flex flex-col items-center">
+            <img src="./imgs/f1.png" alt="" />
+            <h3 class="mt-5 mb-2 text-gold font-bold">Matrix</h3>
+            
+          </div>
+          <hr class="border-b border-bookmark-white" />
+          <div class="flex p-6">
+            
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="flex flex-col rounded-md shadow-md lg:mt-16">
+          <div class="p-6 flex flex-col items-center">
+            <img src="./imgs/x1.png.jpg" alt="" />
+            <h3 class="mt-5 mb-2 font-bold text-gold">Mean IOU</h3>
+            
+          </div>
+          <hr class="border-b border-bookmark-white" />
+          <div class="flex p-6">
+            
+          </div>
+        </div>
+      </div>
+      <!-- Cards ---->
+      
+    </section>
+   
+  </section>
+
+ 
+    <!-- Feature #1 -->
+    <div class="relative mt-20 lg:mt-24 bg-black">
+      <div class="container flex flex-col lg:flex-row items-center justify-center gap-x-24">
+        <!-- Image -->
+        <div class="flex flex-1 justify-center z-10 mb-10 lg:mb-0">
+          <img
+            class="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full img3"
+            src="./imgs/sponsor2.jpg"
+            alt=""
+          />
+        </div>
+        <!-- Content -->
+        <div class="flex flex-1 flex-col items-center lg:items-start">
+          <h1 class="text-3xl text-gold">PIN TYPE INSULATOR</h1>
+          <p class="text-white my-4 text-center lg:text-left sm:w-3/4 lg:w-full">
+            A pin insulator is a device that isolates a wire from a physical support such as a pin (a wooden or metal dowel of about 3 cm diameter with screw threads) on a telegraph or utility pole. It is a formed, single layer shape that is made out of a non-conducting material, usually porcelain or glass. It is thought to be the earliest developed overhead insulator and is still popularly used in power networks up to 33 KV.
+          </p>
+          
+        </div>
+      </div>
+      
+    <!-- Feature #2 -->
+    <div class="relative mt-20 lg:mt-52">
+      <div class="container flex flex-col lg:flex-row-reverse items-center justify-center gap-x-24">
+        <!-- Image -->
+        <div class="flex flex-1 justify-center z-10 mb-10 lg:mb-0">
+          <img
+            class="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full img3"
+            src="./imgs/giki.jpeg"
+            alt=""
+          />
+        </div>
+        <!-- Content -->
+        <div class="flex flex-1 flex-col items-center lg:items-start">
+          <h1 class="text-3xl text-gold">SUSPENSION TYPE INSULATOR</h1>
+          <p class="text-white my-4 text-center lg:text-left sm:w-3/4 lg:w-full">
+            The suspension insulator separates the line conductors and supports them electrically. It consists the number of porcelain insulator units connected with each other by metal links to form a flexible string. The conductor is connected at the bottom of the string.
+            Each unit operates the voltage of about 11kV and hence depending upon the voltage the appropriate number of discs are connected in series with the string.
+            If one of the units is damaged, then it is replaced by the new one and hence no need of replacing the whole string.
+          </p>
+          </div>
+      </div>
+      
+    <!-- Feature #3 -->
+    <div class="relative mt-20 lg:mt-52">
+      <div class="container flex flex-col lg:flex-row items-center justify-center gap-x-24">
+        <!-- Image -->
+        <div class="flex flex-1 justify-center z-10 mb-10 lg:mb-0">
+          <img
+            class="w-5/6 h-5/6 sm:w-3/4 sm:h-3/4 md:w-full md:h-full img3"
+            src="./imgs/b22.jpeg"
+            alt=""
+          />
+        </div>
+        <!-- Content -->
+        <div class="flex flex-1 flex-col items-center lg:items-start">
+          <h1 class="text-3xl text-gold">U-Net Architecture</h1>
+          <p class="text-white my-4 text-center lg:text-left sm:w-3/4 lg:w-full">
+            U-Net is an architecture for semantic segmentation. It consists of a contracting path and an expansive path. The contracting path follows the typical architecture of a convolutional network. It consists of the repeated application of two 3x3 convolutions (unpadded convolutions), each followed by a rectified linear unit (ReLU) and a 2x2 max pooling operation with stride 2 for downsampling. At each downsampling step we double the number of feature channels. Every step in the expansive path consists of an upsampling of the feature map followed by a 2x2 convolution (“up-convolution”) that halves the number of feature channels, a concatenation with the correspondingly cropped feature map from the contracting path, and two 3x3 convolutions, each followed by a ReLU. The cropping is necessary due to the loss of border pixels in every convolution. At the final layer a 1x1 convolution is used to map each 64-component feature vector to the desired number of classes.
+          </p>
+          </div>
+      </div>
+      
+    
+     
+
+       
+  </section>
+
+  <section class="bg-black text-white py-20 mt-40 ">
+    
+    
+      
+  </section>
+<!-- Members Section -->
+<section class="bg-black text-white py-20">
+<div class="container mx-auto">
+  <h2 class="text-3xl text-center text-gold mb-10">Our Team</h2>
+  <div class="flex flex-wrap justify-center gap-8">
+    <!-- Member 1 -->
+    <div class="member-card">
+      <img src="./imgs/member1.PNG" alt="Member 1" class="rounded-full w-24 h-24 object-cover">
+      <h3 class="text-xl text-center mt-4">Abdul Hadi</h3>
+    </div>
+    <!-- Member 2 -->
+    <div class="member-card">
+      <img src="./imgs/member2.jpg" alt="Member 2" class="rounded-full w-24 h-24 object-cover">
+      <h3 class="text-xl text-center mt-4">Ali Arbab Khalil</h3>
+    </div>
+    <!-- Member 3 -->
+    <div class="member-card">
+      <img src="./imgs/member3.jpg" alt="Member 3" class="rounded-full w-24 h-24 object-cover">
+      <h3 class="text-xl text-center mt-4">Muhammad Ali Ahmed</h3>
+    </div>
+    <!-- Member 4 -->
+    <div class="member-card">
+      <img src="./imgs/member4.jpg" alt="Member 4" class="rounded-full w-24 h-24 object-cover">
+      <h3 class="text-xl text-center mt-4">Zarak Kamal Khan</h3>
+    </div>
+  </div>
+</div>
+</section>
+  <!-- Footer -->
+  <footer class="bg-black py-8">
+    <div class="container flex flex-col md:flex-row items-center">
+      <div class="flex flex-1 flex-wrap items-center justify-center md:justify-start gap-12">
+        <img src="./imgs/logo-bookmark-white.png" alt="" />
+        <ul class="flex text-white uppercase gap-12 text-xs">
+        </ul>
+      </div>
+      <div class="flex gap-10 mt-12 md:mt-0">
+        >
+        
+      </div>
+      
+    </div>
+    
+  </footer>
+ 
+  <section class="bg-black text-white py-0 mt-0 ">
+    <div class="container bg-black">
+      <div class="sm:w-3/4 lg:w-max mx-auto bg-black">
+        
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>

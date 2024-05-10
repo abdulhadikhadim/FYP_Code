@@ -1,14 +1,11 @@
-
-import numpy as np
 import tensorflow as tf
-from tensorflow.keras import backend as K
 
-smooth = 1e-15
-def dice_coef(y_true, y_pred):
-    y_true = tf.keras.layers.Flatten()(y_true)
-    y_pred = tf.keras.layers.Flatten()(y_pred)
-    intersection = tf.reduce_sum(y_true * y_pred)
-    return (2. * intersection + smooth) / (tf.reduce_sum(y_true) + tf.reduce_sum(y_pred) + smooth)
+def categorical_dice_coef(y_true, y_pred, axis=(1, 2), smooth=1e-5):
+    intersection = tf.reduce_sum(y_true * y_pred, axis=axis)
+    union = tf.reduce_sum(y_true + y_pred, axis=axis)
+    dice = (2. * intersection + smooth) / (union + smooth)
+    return tf.reduce_mean(dice)
 
-def dice_loss(y_true, y_pred):
-    return 1.0 - dice_coef(y_true, y_pred)
+def categorical_dice_loss(y_true, y_pred):
+    return 1.0 - categorical_dice_coef(y_true, y_pred)
+
